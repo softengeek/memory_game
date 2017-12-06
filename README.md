@@ -1,20 +1,12 @@
 # Memory Game Project
-
+This project contains a Memory Game from the Udacity Front End Developer Nanodegree program.
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Rating](#rating)
 
 ## Instructions
+In order to play the game, click on the cards to reveal its icon. Once two cards are the a match, those cards will stay visible. If the cards are not a match, the card will be hidden once again. You win the game once you have matched all the cards. To restart the game, select the icon above the deck on the right hand side. The game also keeps track of your time
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Rating
+To achieve a 3 star rating, less than 12 moves is required. A 2 star rating is less than 16.

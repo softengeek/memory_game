@@ -1,5 +1,7 @@
 /*
  * Create a list that holds all of your cards
+ * Timer vairable to control timer, cardArray for matched
+ * items and moves to track user moves
  */
  let cardArray = [];
  let moves = 0;
@@ -14,6 +16,7 @@
 
 shuffleCards();
 
+//Shuffle Cards to begin a new game
 function shuffleCards() {
   const cards = $('.card');
 
@@ -28,6 +31,7 @@ function shuffleCards() {
   openCardsOnStart(cards);
 }
 
+//Displays cards for a second before game play
 function openCardsOnStart(cards) {
   setTimeout(function() {
     for (const card of cards) {
@@ -63,14 +67,19 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+ //Event listener to trigger once a card is clicked
  $(document).on('click', '.card', function() {
-   displayCard($(this));
-   addCardToList($(this));
-   if (!$('.counter').hasClass('start')) {
-     timer = startCounter();
+   if (!$(this).hasClass('clicked')) {
+     $(this).addClass('clicked');
+     displayCard($(this));
+     addCardToList($(this));
+     if (!$('.counter').hasClass('start')) {
+       timer = startCounter();
+     }
    }
  });
 
+//Controls the counter for the game
  function startCounter() {
    $('.counter').addClass('start');
    let seconds = 0, minutes = 0, hours = 0, days = 0;
@@ -96,9 +105,14 @@ function shuffle(array) {
    }, 1000);
  }
 
+//Displays a card once it is clicked
  function displayCard(card) {
    card.addClass('open show');
  }
+
+/* Adds a card to the cardArray so that the cards can be checked
+ * to see if they match
+ */
 
  function addCardToList(card) {
    cardArray.push(card);
@@ -115,6 +129,7 @@ function shuffle(array) {
        unmatchCards()
      }, 500);
      increaseMoves();
+     $('.clicked').removeClass('clicked');
    }
 
    setTimeout(function() {
@@ -122,12 +137,14 @@ function shuffle(array) {
    }, 500);
  }
 
+//Once the cards are the same this function adds the class match
  function matchCards() {
    for (const card of cardArray) {
      card.addClass('match animate');
    }
  }
 
+//Hides the cards that were clicked but are not the same cards
  function unmatchCards() {
    for (const card of cardArray) {
      card.removeClass('open show');
@@ -137,12 +154,14 @@ function shuffle(array) {
    cardArray.pop();
  }
 
+//increases the moves once two difference cards are clicked
  function increaseMoves() {
    moves++;
    $('.moves').html(moves);
    checkStarRating();
  }
 
+//Decreases star rating based on the number of moves made
 function checkStarRating() {
   const starsChildren = $('.stars').children();
   if (moves >= 12 && moves < 16) {
@@ -151,23 +170,63 @@ function checkStarRating() {
   if (moves >= 16 && moves < 20) {
     $(starsChildren[1]).hide();
   }
-  if (moves >= 20) {
-    $(starsChildren[2]).hide();
-  }
 }
 
+//Checks to see if the game has been won
  function checkWinner(){
    const matches = $('.match');
    const cards = $('.card');
    if (matches.length  === cards.length) {
      window.clearInterval(timer);
-     alert("Winner");
+     const rating = getStarRating();
+     const timeTaken = getTimeTaken();
+     swal(
+       'You Won!',
+       `Rating: ${rating} <br> Time: ${timeTaken} <br> Play Again?`,
+       'success')
+    .then((gameRestart) => {
+        if (gameRestart) {
+          restartGame();
+        }
+      });
    }
  }
 
+//Retrieves the star rating at the end of the game
+ function getStarRating() {
+   const stars = $('.fa-star:visible');
+   return stars.length;
+ }
+
+ //Retrieves the time taken to complete the game
+ function getTimeTaken() {
+   return $('.counter').text();
+ }
+
+//Restarts the game on click
 $('.restart').on('click', function() {
+  restartGame();
+})
+
+//function to restart the game
+function restartGame() {
   moves = -1;
   increaseMoves();
   shuffleCards();
+  resetStars();
+  clearCounter();
   cardArray = [];
-})
+}
+
+function resetStars() {
+  const starsChildren = $('.stars').children();
+
+  for (const star of starsChildren) {
+    $(this).show();
+  }
+}
+
+function clearCounter() {
+  $('.counter').removeClass('start').html('0:0:0:0');
+  window.clearInterval(timer);
+}
