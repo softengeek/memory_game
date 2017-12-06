@@ -3,6 +3,7 @@
  */
  let cardArray = [];
  let moves = 0;
+ let timer = null;
 
 /*
  * Display the cards on the page
@@ -65,7 +66,35 @@ function shuffle(array) {
  $(document).on('click', '.card', function() {
    displayCard($(this));
    addCardToList($(this));
+   if (!$('.counter').hasClass('start')) {
+     timer = startCounter();
+   }
  });
+
+ function startCounter() {
+   $('.counter').addClass('start');
+   let seconds = 0, minutes = 0, hours = 0, days = 0;
+   let time = '';
+   return window.setInterval(function () {
+     seconds++;
+     if (seconds === 60) {
+       seconds = 0;
+       minutes++;
+     }
+
+     if (minutes === 60) {
+       minutes = 0;
+       hours++
+     }
+
+     if (hours === 24) {
+       hours = 0;
+       days++
+     }
+     time = `${days}:${hours}:${minutes}:${seconds}`;
+     $('.counter').html(time);
+   }, 1000);
+ }
 
  function displayCard(card) {
    card.addClass('open show');
@@ -111,12 +140,27 @@ function shuffle(array) {
  function increaseMoves() {
    moves++;
    $('.moves').html(moves);
+   checkStarRating();
  }
+
+function checkStarRating() {
+  const starsChildren = $('.stars').children();
+  if (moves >= 12 && moves < 16) {
+    $(starsChildren[0]).hide();
+  }
+  if (moves >= 16 && moves < 20) {
+    $(starsChildren[1]).hide();
+  }
+  if (moves >= 20) {
+    $(starsChildren[2]).hide();
+  }
+}
 
  function checkWinner(){
    const matches = $('.match');
    const cards = $('.card');
    if (matches.length  === cards.length) {
+     window.clearInterval(timer);
      alert("Winner");
    }
  }

@@ -141,3 +141,9 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.score-panel .counter {
+  width: 50px;
+  display: inline;
+  margin-left: 25%;
+}
